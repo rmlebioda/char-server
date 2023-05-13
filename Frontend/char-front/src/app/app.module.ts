@@ -15,6 +15,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatCardModule} from "@angular/material/card";
 import {ColorSchemeService} from "./modules/services/color-scheme.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {ColorSchemeService} from "./modules/services/color-scheme.service";
     MatFormFieldModule,
     MatExpansionModule,
     MatSlideToggleModule,
-    MatCardModule
+    MatCardModule,
+    HttpClientModule
   ],
   providers: [
     ColorSchemeService

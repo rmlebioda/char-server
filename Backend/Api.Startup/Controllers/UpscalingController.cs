@@ -8,7 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace Api.Startup.Controllers;
 
 [ApiController]
-[Route("upscaling")]
+[Route("api/upscaling")]
 public class UpscalingController : ControllerBase
 {
     #if DEBUG
@@ -28,9 +28,9 @@ public class UpscalingController : ControllerBase
     }
 
     [HttpGet("real-esrgan/help", Name = "Real-ESRGAN help")]
-    public async Task<ActionResult<string>> RealEsrganHelp()
+    public async Task<ActionResult<RealEsrganHelpResponse>> RealEsrganHelp()
     {
-        return Ok(await _realEsrganService.GetHelp());
+        return Ok(new RealEsrganHelpResponse(await _realEsrganService.GetHelp()));
     }
 
     [HttpPost("real-esrgan/image", Name = "Real-ESRGAN upscaling")]

@@ -12,12 +12,12 @@
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5166",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "real-esrgan-executable": "/home/tamaki/all/apps/realesrgan-ncnn-vulkan-20220424-ubuntu/realesrgan-ncnn-vulkan"
+        "real-esrgan-executable": "/bin/realesrgan-ncnn-vulkan-20220424-ubuntu/realesrgan-ncnn-vulkan"
       }
     },
     "https": {

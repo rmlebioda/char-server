@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {UpscalingImageComponent} from "./upscaling-image/upscaling-image.component";
+import {ImageUpscalingComponent} from "./modules/image-upscaling/image-upscaling.component";
 
 const routes: Routes = [
-  { path: 'upscaling', component: UpscalingImageComponent, pathMatch: "full" }
+  { path: 'upscaling', component: ImageUpscalingComponent, pathMatch: "full" }
 ];
 
 @NgModule({

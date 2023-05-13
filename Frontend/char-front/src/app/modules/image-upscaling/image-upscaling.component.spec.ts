@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UpscalingImageComponent } from './upscaling-image.component';
+import { ImageUpscalingComponent } from './image-upscaling.component';
 
 describe('UpscalingImageComponent', () => {
-  let component: UpscalingImageComponent;
-  let fixture: ComponentFixture<UpscalingImageComponent>;
+  let component: ImageUpscalingComponent;
+  let fixture: ComponentFixture<ImageUpscalingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UpscalingImageComponent ]
+      declarations: [ ImageUpscalingComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UpscalingImageComponent);
+    fixture = TestBed.createComponent(ImageUpscalingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

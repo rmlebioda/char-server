@@ -24,6 +24,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatInputModule} from "@angular/material/input";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import {MatGridListModule} from "@angular/material/grid-list";
     ReactiveFormsModule,
     MatCheckboxModule,
     MatInputModule,
-    MatGridListModule
+    MatGridListModule,
+    MatTooltipModule
   ],
   providers: [
     ColorSchemeService,

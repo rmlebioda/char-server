@@ -60,7 +60,9 @@ export class InboxService {
             this.updateMail(mail);
           }
           throw error;
-        }),
+        })
+      )
+      .subscribe(
         (response) => {
           (mail.Data as RealEsrganImageResponse).status = RealEsrganImageResponseStatus.Finished;
           mail.Status = this.getImageUpscalingResponseStatusDescription(RealEsrganImageResponseStatus.Finished);
@@ -68,8 +70,7 @@ export class InboxService {
           this.updateMail(mail);
           return response;
         }
-      )
-      .subscribe();
+      );
   }
 
   addMail(mail: Mail) {

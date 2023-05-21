@@ -4,19 +4,19 @@
 @include mat.core();
 
 // Available color palettes: https://material.io/design/color/
-$char-light-primary: mat.define-palette(mat.$indigo-palette);
-$char-light-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-$char-light-warn: mat.define-palette(mat.$red-palette);
+$light-primary: mat.define-palette(mat.$indigo-palette);
+$light-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$light-warn: mat.define-palette(mat.$red-palette);
 
-$char-light-theme: mat.define-light-theme((
+$light-theme: mat.define-light-theme((
   color: (
-    primary: $char-light-primary,
-    accent: $char-light-accent,
-    warn: $char-light-warn,
+    primary: $light-primary,
+    accent: $light-accent,
+    warn: $light-warn,
   )
 ));
 
-$char-dark-theme: mat.define-dark-theme((
+$dark-theme: mat.define-dark-theme((
   color: (
     primary: mat.define-palette(mat.$purple-palette),
     accent: mat.define-palette(mat.$green-palette),
@@ -24,11 +24,11 @@ $char-dark-theme: mat.define-dark-theme((
   )
 ));
 
-@include mat.all-component-themes($char-light-theme);
+@include mat.all-component-themes($light-theme);
 
 //@media (prefers-color-scheme: dark) {
 .dark-mode {
-  @include mat.all-component-colors($char-dark-theme);
+  @include mat.all-component-colors($dark-theme);
 }
 
 /* You can add global styles to this file, and also import other style files */

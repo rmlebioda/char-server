@@ -11,7 +11,7 @@ import {InboxService} from "./modules/services/inbox.service";
 })
 export class AppComponent {
 
-  title = 'char-front';
+  title = 'FrontEnd';
   checked: boolean;
   matBadgeCount: Observable<number>;
 

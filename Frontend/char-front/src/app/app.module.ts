@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ImageUpscalingComponent } from './modules/image-upscaling/image-upscaling.component';
+import { ImageUpscalingComponent } from './modules/components/image-upscaling/image-upscaling.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {MatButtonModule} from "@angular/material/button";
@@ -16,11 +16,20 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatCardModule} from "@angular/material/card";
 import {ColorSchemeService} from "./modules/services/color-scheme.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {MatBadgeModule} from "@angular/material/badge";
+import {InboxService} from "./modules/services/inbox.service";
+import {MatMenuModule} from "@angular/material/menu";
+import { InboxComponent } from './modules/components/inbox/inbox.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatInputModule} from "@angular/material/input";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 @NgModule({
   declarations: [
     AppComponent,
-    ImageUpscalingComponent
+    ImageUpscalingComponent,
+    InboxComponent
   ],
   imports: [
     BrowserModule,
@@ -36,10 +45,17 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
     MatExpansionModule,
     MatSlideToggleModule,
     MatCardModule,
-    HttpClientModule
+    HttpClientModule,
+    MatBadgeModule,
+    MatMenuModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatGridListModule
   ],
   providers: [
-    ColorSchemeService
+    ColorSchemeService,
+    InboxService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,21 @@
+<mat-list class="mat_list">
+  <mat-list-item *ngIf="!(mails | async)?.length">No items</mat-list-item>
+  <mat-list-item *ngFor="let mail of mails | async">
+    <mat-grid-list cols="100" class="grid_list" rowHeight="10:100">
+      <mat-grid-tile colspan="10">
+        <button *ngIf="!!mail.UrlReference" mat-icon-button color="primary" aria-label="Download" (click)="downloadMail(mail)">
+          <mat-icon>download</mat-icon>
+        </button>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="55" class="grid_list_item">{{ mail.Name }}</mat-grid-tile>
+      <mat-grid-tile colspan="25">
+        {{ mail.Status }}
+      </mat-grid-tile>
+      <mat-grid-tile colspan="10">
+        <button mat-icon-button color="primary" aria-label="Toggle navigation" (click)="deleteMail(mail)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-list-item>
+</mat-list>

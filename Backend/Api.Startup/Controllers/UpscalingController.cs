@@ -47,7 +47,8 @@ public class UpscalingController : ControllerBase
         var upscaleTask =
             _realEsrganService.UpscaleImage(uploadedFilePath, image.FileName, settings.ToRealEsrganUpscaleSettings());
 
-        _ = _memoryCache.Set(taskGuid, upscaleTask, CreateCacheOptions());
+        var cacheOptions = CreateCacheOptions();
+        _ = _memoryCache.Set(taskGuid, upscaleTask, cacheOptions);
         _logger.LogDebug("Registered new task {TaskId} and set cache to expire in {ExpiryTimeSpan}", taskGuid,
             FileMaxCacheLifeSpan.ToString());
 
@@ -55,7 +56,8 @@ public class UpscalingController : ControllerBase
         {
             Status = RealEsrganStatus.Started,
             ErrorMessage = null,
-            ImageIdentifier = taskGuid
+            ImageIdentifier = taskGuid,
+            ExpiryDate = cacheOptions.AbsoluteExpiration!.Value.DateTime
         });
     }
 
@@ -63,7 +65,7 @@ public class UpscalingController : ControllerBase
     {
         var options = new MemoryCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = FileMaxCacheLifeSpan
+            AbsoluteExpiration = DateTimeOffset.UtcNow.Add(FileMaxCacheLifeSpan)
         };
         options.RegisterPostEvictionCallback(OnPostEvictionCallback);
         return options;
@@ -71,7 +73,7 @@ public class UpscalingController : ControllerBase
 
     private void OnPostEvictionCallback(object key, object? value, EvictionReason reason, object? state)
     {
-        if (value is Task<RealEsrganUpscaleResult> task && task.IsCompleted)
+        if (value is Task<RealEsrganUpscaleResult> task && task.IsCompleted && !task.IsFaulted)
         {
             var result = task.Result;
             _logger.LogDebug(
@@ -82,8 +84,11 @@ public class UpscalingController : ControllerBase
         }
     }
 
-    [HttpGet("real-esrgan/image/{taskId}", Name = "Real-ESRGAN upscaled image")]
-    public ActionResult RealEsrganHelp(string taskId)
+    [ProducesResponseType(404)]
+    [ProducesResponseType(503)]
+    [ProducesResponseType(200)]
+    [HttpGet("real-esrgan/image/status/{taskId}", Name = "Real-ESRGAN upscaled image status")]
+    public async Task<ActionResult> RealEsrganImageStatus(string taskId)
     {
         if (_memoryCache.TryGetValue(taskId, out Task<RealEsrganUpscaleResult>? task) && task is not null)
         {
@@ -93,7 +98,27 @@ public class UpscalingController : ControllerBase
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, "Image not ready yet");
             }
 
-            var result = task.Result;
+            return Ok();
+        }
+
+        return NotFound();
+    }
+    
+    [ProducesResponseType(404)]
+    [ProducesResponseType(503)]
+    [ProducesResponseType(typeof(PhysicalFileResult), 200)]
+    [HttpGet("real-esrgan/image/{taskId}", Name = "Real-ESRGAN upscaled image")]
+    public async Task<ActionResult> RealEsrganImage(string taskId)
+    {
+        if (_memoryCache.TryGetValue(taskId, out Task<RealEsrganUpscaleResult>? task) && task is not null)
+        {
+            if (!task.IsCompleted)
+            {
+                HttpContext.Response.Headers.Add("Retry-After", "10");
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, "Image not ready yet");
+            }
+
+            var result = await task;
             var newSuggestedFileName = Path.GetFileNameWithoutExtension(result.OriginalFileName) + "_Upscaled" +
                                        Path.GetExtension(result.OriginalFileName);
             return PhysicalFile(result.OutputFilePath, "application/json", newSuggestedFileName);

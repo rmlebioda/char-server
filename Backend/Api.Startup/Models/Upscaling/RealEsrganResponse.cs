@@ -5,4 +5,5 @@ public class RealEsrganResponse
     public RealEsrganStatus Status { get; set; }
     public string? ErrorMessage { get; set; }
     public string? ImageIdentifier { get; set; }
+    public DateTime? ExpiryDate { get; set; }
 }

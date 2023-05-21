@@ -1,0 +1,63 @@
+<div>
+  <h1>Image upscaling</h1>
+  <h2>Real ESRGAN</h2>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header class="expansion-panel">
+      <mat-panel-title>Show executable help</mat-panel-title>
+      <mat-panel-description>Executes executable with help flag and shows output</mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <p class="preserve-paragraph" *ngIf="!RealEsrganHelpFailureMessage">{{ RealEsrganHelp | async }}</p>
+      <p class="preserve-paragraph error" *ngIf="RealEsrganHelpFailureMessage">{{ RealEsrganHelpFailureMessage }}</p>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <mat-card class="form-card">
+    <form class="form" [formGroup]="upscaleForm" (ngSubmit)="onSubmit()">
+      <!--   scaleRatio, modelName, outputFormat, verboseOutput -->
+      <div>
+        <label>Scale ratio:</label>
+        <mat-checkbox [formControl]="useDefaultScaleRatio" (change)="onDefaultScaleRatioChanged()">Use default value</mat-checkbox>
+        <mat-form-field class="margin-left-40" [hideRequiredMarker]="useDefaultScaleRatio.value || false">
+          <input matInput type="number" [formControl]="scaleRatio">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <label>Model name:</label>
+        <mat-checkbox [formControl]="useDefaultModelName" (change)="onDefaultModelNameChanged()">Use default value</mat-checkbox>
+        <mat-form-field class="margin-left-40" [hideRequiredMarker]="useDefaultModelName.value || false">
+          <input matInput type="string" [formControl]="modelName">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <label>Output format:</label>
+        <mat-checkbox [formControl]="useDefaultOutputFormat" (change)="onDefaultOutputFormatChanged()">Use default value</mat-checkbox>
+        <mat-form-field class="margin-left-40" [hideRequiredMarker]="useDefaultOutputFormat.value || false">
+          <input matInput type="string" [formControl]="outputFormat">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <label>Verbose output:</label>
+        <mat-checkbox [formControl]="useDefaultVerboseOutput" (change)="onDefaultVerboseOutputChanged()">Use default value</mat-checkbox>
+        <mat-form-field class="margin-left-40" [hideRequiredMarker]="useDefaultVerboseOutput.value || false">
+          <input matInput type="string" [formControl]="verboseOutput">
+        </mat-form-field>
+      </div>
+
+      <div class="margin-bottom-20">
+        <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+        <input hidden (change)="onFileSelected($event)" #fileInput type="file">
+        <span class="file-name">{{selectedFile?.name}}</span>
+      </div>
+
+      <div class="error margin-bottom-20" *ngIf="RealEsrganImageFailureMessage">
+        {{RealEsrganImageFailureMessage}}
+      </div>
+
+      <button type="submit">Send</button>
+    </form>
+  </mat-card>
+</div>

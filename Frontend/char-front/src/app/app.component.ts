@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import {ColorSchemeService} from "./modules/services/color-scheme.service";
 import {Consts} from "./consts";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {InboxService} from "./modules/services/inbox.service";
 
 @Component({
   selector: 'app-root',
@@ -8,12 +10,18 @@ import {Consts} from "./consts";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'char-front';
   checked: boolean;
+  matBadgeCount: Observable<number>;
 
-  constructor(private colorSchemeService: ColorSchemeService) {
+
+  constructor(
+    private colorSchemeService: ColorSchemeService,
+    private inboxService: InboxService) {
     colorSchemeService.setDefaultColorScheme();
     this.checked = colorSchemeService.isDarkTheme();
+    this.matBadgeCount = inboxService.getBadgeCount();
   }
 
   colorThemeChanged(checked: boolean) {

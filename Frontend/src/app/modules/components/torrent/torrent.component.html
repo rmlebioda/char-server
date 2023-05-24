@@ -1,0 +1,24 @@
+<div>
+  <h1>Torrent</h1>
+
+  <mat-card class="form-card">
+    <h2>Add torrent with magnet (qBitTorrent)</h2>
+
+    <form class="form" [formGroup]="torrentForm" (ngSubmit)="onSubmit()">
+
+      <div>
+        <label>Magnet URL:</label>
+        <mat-form-field class="margin-left-40" required class="magnet-input">
+          <input matInput type="string" [formControl]="magnet">
+        </mat-form-field>
+      </div>
+
+      <button type="submit">Send</button>
+
+      <div class="error margin-bottom-20" *ngIf="AddTorrentErrorMessage">
+        {{AddTorrentErrorMessage}}
+      </div>
+
+    </form>
+  </mat-card>
+</div>

@@ -20,3 +20,5 @@ npm start
 
 ## Current functionality
 - Real-ESRGAN - AI image restoration tool for images and video (currently supports only images)
+- Torrent - adding torrent with magnet link to qBitTorrent
+

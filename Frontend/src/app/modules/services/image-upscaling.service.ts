@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable, shareReplay} from "rxjs";
 import {RealEsrganHelpResponse} from "../models/real-esrgan-help-response";
-import {RealEsrganImageRequest} from "../models/real-esrgan-image-request";
 import {RealEsrganImageResponse} from "../models/real-esrgan-image-response";
-import {RealEsrganImageTaskResponse} from "../models/real-esrgan-image-task-response";
 
 @Injectable({
   providedIn: 'root'

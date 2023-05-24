@@ -3,6 +3,7 @@ import {ColorSchemeService} from "./modules/services/color-scheme.service";
 import {Consts} from "./consts";
 import {Observable} from "rxjs";
 import {InboxService} from "./modules/services/inbox.service";
+import {SpinnerService} from "./modules/services/spinner.service";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,9 @@ export class AppComponent {
 
   constructor(
     private colorSchemeService: ColorSchemeService,
-    private inboxService: InboxService) {
+    private inboxService: InboxService,
+    public spinnerService: SpinnerService
+  ) {
     colorSchemeService.setDefaultColorScheme();
     this.checked = colorSchemeService.isDarkTheme();
     this.matBadgeCount = inboxService.getBadgeCount();

@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Cli.RealEsrgan\Cli.RealEsrgan.csproj" />
+      <ProjectReference Include="..\Cli.Torrent\Cli.Torrent.csproj" />
       <ProjectReference Include="..\EnvironmentSettings\EnvironmentSettings.csproj" />
     </ItemGroup>
 

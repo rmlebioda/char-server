@@ -28,10 +28,6 @@ export class ImageUpscalingService {
     return this.http.post<RealEsrganImageResponse>("/api/upscaling/real-esrgan/image", formData);
   }
 
-  getUpscsaledImage(taskId: string): Observable<RealEsrganImageTaskResponse> {
-    return this.http.get<RealEsrganImageTaskResponse>("/api/upscaling/real-esrgan/image/" + taskId);
-  }
-
   getUpscsaledImageStatus(taskId: string): Observable<Response> {
     return this.http.get<Response>("/api/upscaling/real-esrgan/image/status/" + taskId);
   }

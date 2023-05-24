@@ -112,11 +112,6 @@ export class ImageUpscalingComponent implements OnInit {
         catchError((error) => {
           this.RealEsrganImageFailureMessage = "Failed to send request due to error: " + JSON.stringify(error);
           return throwError(error);
-        }),
-        map(response => {
-          console.log(response.expiryDate);
-          response.expiryDate = new Date(response.expiryDate!)
-          return response;
         })
       );
 

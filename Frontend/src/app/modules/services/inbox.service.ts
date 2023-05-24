@@ -56,11 +56,13 @@ export class InboxService {
   }
 
   private didExpire(mail: Mail): boolean {
+    if (typeof (mail.Data as RealEsrganImageResponse).expiryDate === 'string') {
+      (mail.Data as RealEsrganImageResponse).expiryDate = new Date((mail.Data as RealEsrganImageResponse).expiryDate!);
+    }
     return new Date() > ((mail.Data as RealEsrganImageResponse).expiryDate ?? new Date(-8640000000000000));
   }
 
   private checkMail(mail: Mail) {
-    console.log("checking mail: " + JSON.stringify(mail));
     this.imageUpscalingService
       .getUpscsaledImageStatus(mail.Identifier)
       .pipe(
@@ -86,7 +88,11 @@ export class InboxService {
   }
 
   private invalidateMail(mail: Mail) {
-    console.log("mail expired: " + JSON.stringify(mail));
+    console.log("invalidating mail");
+    (mail.Data as RealEsrganImageResponse).status = RealEsrganImageResponseStatus.Expired;
+    mail.Status = this.getImageUpscalingResponseStatusDescription(RealEsrganImageResponseStatus.Expired);
+    mail.UrlReference = "";
+    this.updateMail(mail);
   }
 
   addMail(mail: Mail) {
@@ -145,6 +151,9 @@ export class InboxService {
     }
     if (value === RealEsrganImageResponseStatus.Finished) {
       return 'Finished';
+    }
+    if (value === RealEsrganImageResponseStatus.Expired) {
+      return 'Expired';
     }
     return 'Unknown';
   }

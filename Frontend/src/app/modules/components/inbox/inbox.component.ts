@@ -11,7 +11,7 @@ import {Mail} from "../../models/mail";
 export class InboxComponent {
 
   public mails: Observable<Mail[]>;
-  public displayedColumns = ['download', 'name', 'delete'];
+  public displayedColumns = ['download', 'name', 'status', 'expireIn', 'delete'];
 
   constructor(
     private inboxService: InboxService

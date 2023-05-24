@@ -57,7 +57,7 @@ public class UpscalingController : ControllerBase
             Status = RealEsrganStatus.Started,
             ErrorMessage = null,
             ImageIdentifier = taskGuid,
-            ExpiryDate = cacheOptions.AbsoluteExpiration!.Value.DateTime
+            ExpiryDate = cacheOptions.AbsoluteExpiration!.Value.ToUniversalTime().UtcDateTime
         });
     }
 
@@ -65,7 +65,7 @@ public class UpscalingController : ControllerBase
     {
         var options = new MemoryCacheEntryOptions
         {
-            AbsoluteExpiration = DateTimeOffset.UtcNow.Add(FileMaxCacheLifeSpan)
+            AbsoluteExpiration = DateTimeOffset.Now.Add(FileMaxCacheLifeSpan).ToUniversalTime()
         };
         options.RegisterPostEvictionCallback(OnPostEvictionCallback);
         return options;

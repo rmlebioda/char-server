@@ -1,5 +1,7 @@
+using Api.Startup.Core;
 using Cli.RealEsrgan;
 using EnvironmentSettings;
+using Newtonsoft.Json.Converters;
 using Serilog;
 
 // validate environment variables
@@ -28,7 +30,11 @@ var logger = loggerConfiguration.CreateLogger();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateTimeIsoJsonConverter());
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

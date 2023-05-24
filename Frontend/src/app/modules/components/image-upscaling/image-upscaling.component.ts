@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ImageUpscalingService} from "../../services/image-upscaling.service";
-import {catchError, Observable, throwError} from "rxjs";
+import {catchError, map, Observable, throwError} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {RealEsrganImageRequest} from "../../models/real-esrgan-image-request";
 import {InboxService} from "../../services/inbox.service";
@@ -108,10 +108,17 @@ export class ImageUpscalingComponent implements OnInit {
 
     let imageUpscalingSubscription = this.imageUpscalingService
       .upscaleImage(upscaleObject, this.selectedFile)
-      .pipe(catchError((error) => {
-        this.RealEsrganImageFailureMessage = "Failed to send request due to error: " + JSON.stringify(error);
-        return throwError(error);
-      }));
+      .pipe(
+        catchError((error) => {
+          this.RealEsrganImageFailureMessage = "Failed to send request due to error: " + JSON.stringify(error);
+          return throwError(error);
+        }),
+        map(response => {
+          console.log(response.expiryDate);
+          response.expiryDate = new Date(response.expiryDate!)
+          return response;
+        })
+      );
 
     this.inboxService.imageUpscaleSubscription(imageUpscalingSubscription, this.selectedFile.name);
   }

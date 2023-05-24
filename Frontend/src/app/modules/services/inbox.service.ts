@@ -38,13 +38,25 @@ export class InboxService {
 
   private runBackgroundScheduler() {
     this.refreshInboxSubscription = this.refreshInboxInterval.subscribe(val => {
+
       this.mailsSubject.value
         .filter(mail => mail.Type === MailType.ImageUpscaling
           && (mail.Data as RealEsrganImageResponse).status === RealEsrganImageResponseStatus.Started)
         .forEach((mail) => {
           this.checkMail(mail);
         });
+
+      this.mailsSubject.value
+        .filter(mail => mail.Type === MailType.ImageUpscaling && (mail.Data as RealEsrganImageResponse).status === RealEsrganImageResponseStatus.Finished && this.didExpire(mail))
+        .forEach((mail) => {
+          this.invalidateMail(mail);
+        });
+
     });
+  }
+
+  private didExpire(mail: Mail): boolean {
+    return new Date() > ((mail.Data as RealEsrganImageResponse).expiryDate ?? new Date(-8640000000000000));
   }
 
   private checkMail(mail: Mail) {
@@ -71,6 +83,10 @@ export class InboxService {
           return response;
         }
       );
+  }
+
+  private invalidateMail(mail: Mail) {
+    console.log("mail expired: " + JSON.stringify(mail));
   }
 
   addMail(mail: Mail) {

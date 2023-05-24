@@ -26,6 +26,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatHeaderCellDef, MatTableModule} from "@angular/material/table";
+import {TimeagoModule} from "ngx-timeago";
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import {MatHeaderCellDef, MatTableModule} from "@angular/material/table";
         MatInputModule,
         MatGridListModule,
         MatTooltipModule,
-        MatTableModule
+        MatTableModule,
+      TimeagoModule.forRoot()
     ],
   providers: [
     ColorSchemeService,

@@ -20,7 +20,7 @@
 <!--  </mat-list-item>-->
 <!--</mat-list>-->
 
-<table mat-table [dataSource]="mails">
+<table mat-table [dataSource]="mails" (click) = "$event.stopPropagation()">
 
   <ng-container matColumnDef="download">
     <th mat-header-cell *matHeaderCellDef></th>
@@ -35,6 +35,16 @@
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>File name</th>
     <th mat-cell *matCellDef="let mail">{{ mail.Name }}</th>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <th mat-cell *matCellDef="let mail">{{ mail.Status }}</th>
+  </ng-container>
+
+  <ng-container matColumnDef="expireIn">
+    <th mat-header-cell *matHeaderCellDef>Expires in</th>
+    <th mat-cell *matCellDef="let mail">{{ mail.Data.expiryDate | timeago }}</th>
   </ng-container>
 
   <ng-container matColumnDef="delete">

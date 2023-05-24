@@ -1,21 +1,52 @@
-<mat-list class="mat_list">
-  <mat-list-item *ngIf="!(mails | async)?.length">No items</mat-list-item>
-  <mat-list-item *ngFor="let mail of mails | async">
-    <mat-grid-list cols="100" class="grid_list" rowHeight="10:100">
-      <mat-grid-tile colspan="10">
-        <button *ngIf="!!mail.UrlReference" mat-icon-button color="primary" aria-label="Download" (click)="downloadMail(mail)">
-          <mat-icon>download</mat-icon>
-        </button>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="55" class="grid_list_item">{{ mail.Name }}</mat-grid-tile>
-      <mat-grid-tile colspan="25">
-        {{ mail.Status }}
-      </mat-grid-tile>
-      <mat-grid-tile colspan="10">
-        <button mat-icon-button color="primary" aria-label="Toggle navigation" (click)="deleteMail(mail)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </mat-grid-tile>
-    </mat-grid-list>
-  </mat-list-item>
-</mat-list>
+<!--<mat-list class="mat_list">-->
+<!--  <mat-list-item *ngIf="!(mails | async)?.length">No items</mat-list-item>-->
+<!--  <mat-list-item *ngFor="let mail of mails | async">-->
+<!--    <mat-grid-list cols="100" class="grid_list" rowHeight="48px">-->
+<!--      <mat-grid-tile colspan="10">-->
+<!--        <button *ngIf="!!mail.UrlReference" mat-icon-button color="primary" aria-label="Download" (click)="downloadMail(mail)">-->
+<!--          <mat-icon>download</mat-icon>-->
+<!--        </button>-->
+<!--      </mat-grid-tile>-->
+<!--      <mat-grid-tile colspan="55" class="grid_list_item">{{ mail.Name }}</mat-grid-tile>-->
+<!--      <mat-grid-tile colspan="25">-->
+<!--        {{ mail.Status }}-->
+<!--      </mat-grid-tile>-->
+<!--      <mat-grid-tile colspan="10">-->
+<!--        <button mat-icon-button color="primary" aria-label="Toggle navigation" (click)="deleteMail(mail)">-->
+<!--          <mat-icon>delete</mat-icon>-->
+<!--        </button>-->
+<!--      </mat-grid-tile>-->
+<!--    </mat-grid-list>-->
+<!--  </mat-list-item>-->
+<!--</mat-list>-->
+
+<table mat-table [dataSource]="mails">
+
+  <ng-container matColumnDef="download">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <th mat-cell *matCellDef="let mail">
+      <button *ngIf="!!mail.UrlReference" mat-icon-button color="primary" aria-label="Download"
+              (click)="downloadMail(mail)">
+        <mat-icon>download</mat-icon>
+      </button>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>File name</th>
+    <th mat-cell *matCellDef="let mail">{{ mail.Name }}</th>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <th mat-cell *matCellDef="let mail">
+      <button mat-icon-button color="primary" aria-label="Toggle navigation" (click)="deleteMail(mail)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </th>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>

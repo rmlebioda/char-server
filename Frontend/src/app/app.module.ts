@@ -25,6 +25,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatInputModule} from "@angular/material/input";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatHeaderCellDef, MatTableModule} from "@angular/material/table";
 
 @NgModule({
   declarations: [
@@ -32,29 +33,30 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     ImageUpscalingComponent,
     InboxComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatSidenavModule,
-    BrowserAnimationsModule,
-    NoopAnimationsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatListModule,
-    MatFormFieldModule,
-    MatExpansionModule,
-    MatSlideToggleModule,
-    MatCardModule,
-    HttpClientModule,
-    MatBadgeModule,
-    MatMenuModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    MatInputModule,
-    MatGridListModule,
-    MatTooltipModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        MatSidenavModule,
+        BrowserAnimationsModule,
+        NoopAnimationsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatListModule,
+        MatFormFieldModule,
+        MatExpansionModule,
+        MatSlideToggleModule,
+        MatCardModule,
+        HttpClientModule,
+        MatBadgeModule,
+        MatMenuModule,
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatGridListModule,
+        MatTooltipModule,
+        MatTableModule
+    ],
   providers: [
     ColorSchemeService,
     InboxService

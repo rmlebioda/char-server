@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {ColorSchemeService} from "./modules/services/color-scheme.service";
 import {Consts} from "./consts";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {Observable} from "rxjs";
 import {InboxService} from "./modules/services/inbox.service";
 
 @Component({

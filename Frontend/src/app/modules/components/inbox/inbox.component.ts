@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {InboxService} from "../../services/inbox.service";
-import {exhaustMap, interval, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {Mail} from "../../models/mail";
 
 @Component({
@@ -11,6 +11,7 @@ import {Mail} from "../../models/mail";
 export class InboxComponent {
 
   public mails: Observable<Mail[]>;
+  public displayedColumns = ['download', 'name', 'delete'];
 
   constructor(
     private inboxService: InboxService

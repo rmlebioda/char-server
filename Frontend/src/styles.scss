@@ -35,3 +35,10 @@ $dark-theme: mat.define-dark-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+::ng-deep.mat-menu-panel {
+  max-width: none !important;
+}
+.mat-mdc-menu-panel.mat-mdc-menu-panel {
+  max-width: none !important;
+}

@@ -1,0 +1,44 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+WORKDIR /app
+
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
+
+# Build runtime image
+# FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM ubuntu:latest
+
+RUN mkdir /app
+
+RUN apt-get update
+RUN apt-get install -y wget
+RUN apt-get install -y aspnetcore-runtime-7.0 
+RUN apt-get install -y unzip
+
+# add support for GPU (vulkan)
+RUN apt-get install -y \
+	libgomp1 \
+	libxext6 \
+	libvulkan1 \
+	libvulkan-dev \
+	vulkan-tools
+
+# download REAL-ESRGAN
+RUN wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip
+RUN unzip realesrgan-ncnn-vulkan-20220424-ubuntu.zip -d real-esrgan
+RUN mv real-esrgan /app
+RUN ["chmod", "+x", "/app/real-esrgan/realesrgan-ncnn-vulkan"]
+
+WORKDIR /app
+
+COPY --from=build-env /app/out .
+
+ENV real_esrgan_executable=/app/real-esrgan/realesrgan-ncnn-vulkan
+ENV log_directory_path=/logs
+
+CMD dotnet Api.Startup.dll --urls http://0.0.0.0:5000
+

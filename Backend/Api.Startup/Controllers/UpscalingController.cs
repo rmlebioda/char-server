@@ -88,7 +88,7 @@ public class UpscalingController : ControllerBase
     [ProducesResponseType(503)]
     [ProducesResponseType(200)]
     [HttpGet("real-esrgan/image/status/{taskId}", Name = "Real-ESRGAN upscaled image status")]
-    public async Task<ActionResult> RealEsrganImageStatus(string taskId)
+    public ActionResult RealEsrganImageStatus(string taskId)
     {
         if (_memoryCache.TryGetValue(taskId, out Task<RealEsrganUpscaleResult>? task) && task is not null)
         {

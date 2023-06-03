@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      context: Backend
+      dockerfile: Backend/Dockerfile_ubuntu_x64
+    restart: unless-stopped
+    image: home_server_backend:latest
+    devices:
+      - "/dev/dri"
+  frontend:
+    build:
+      context: Frontend
+      dockerfile: Frontend/Dockerfile_x64
+    restart: unless-stopped
+    ports:
+      - "3107:4200"
+    image: home_server_frontend:latest
+    links:
+      - "backend"
+

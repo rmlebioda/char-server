@@ -1,0 +1,15 @@
+FROM node:lts-alpine as builder
+
+RUN mkdir /app
+WORKDIR /app
+
+RUN npm install -g @angular/cli@15
+
+COPY . ./
+
+RUN npm install
+
+FROM builder as runner
+
+CMD ["npm", "start"]
+

@@ -22,3 +22,9 @@ npm start
 - Real-ESRGAN - AI image restoration tool for images and video (currently supports only images)
 - Torrent - adding torrent with magnet link to qBitTorrent
 
+## Containerization
+Both front-end and back-end can be containerized with docker, each has its own dockerfile and docker-compose helps running both services at once.
+
+## OS Support
+Due to Real-ESRGAN being available only at x86/amd64 platform, dockerfile supports only those platforms.
+

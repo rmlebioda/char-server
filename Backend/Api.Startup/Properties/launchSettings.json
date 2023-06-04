@@ -17,7 +17,7 @@
       "applicationUrl": "http://localhost:5166",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "real-esrgan-executable": "/bin/realesrgan-ncnn-vulkan-20220424-ubuntu/realesrgan-ncnn-vulkan"
+        "real_esrgan_executable": "/bin/realesrgan-ncnn-vulkan-20220424-ubuntu/realesrgan-ncnn-vulkan"
       }
     },
     "https": {

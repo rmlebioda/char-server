@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ImageUpscalingService} from "../../services/image-upscaling.service";
-import {catchError, map, Observable, throwError} from "rxjs";
+import {BehaviorSubject, catchError, map, Observable, throwError} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {RealEsrganImageRequest} from "../../models/real-esrgan-image-request";
 import {InboxService} from "../../services/inbox.service";
+import {ArrayType} from "@angular/compiler";
 
 @Component({
   selector: 'app-image-upscaling',
@@ -39,9 +40,31 @@ export class ImageUpscalingComponent implements OnInit {
   });
 
 
-  selectedFile: any = null;
+
+  selectedFiles: any = null;
+  selectedFilesNameSubject: BehaviorSubject<string> = new BehaviorSubject<string>("");
+  selectedFilesName: Observable<string>;
+
+  updateSelectedNameSubject() {
+    let files = this.getSelectedFilesList();
+    console.log(files);
+
+    this.selectedFilesNameSubject.next(files.map(file => file.name).join(" "));
+  }
+
+  getSelectedFilesList() : File[] {
+    if (this.selectedFiles instanceof File) {
+      return [this.selectedFiles];
+    } else if (this.selectedFiles instanceof FileList) {
+      return Array.from(this.selectedFiles);
+    }
+
+    return [];
+  }
 
   constructor(private imageUpscalingService: ImageUpscalingService, private inboxService: InboxService) {
+    this.selectedFilesName = this.selectedFilesNameSubject.asObservable();
+
     this.RealEsrganHelp = imageUpscalingService.getHelp()
       .pipe(catchError((error) => {
         this.RealEsrganHelpFailureMessage = "Failed to get help";
@@ -52,8 +75,9 @@ export class ImageUpscalingComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0] ?? null;
+  onFilesSelected(event: any): void {
+    this.selectedFiles = event.target.files ?? null;
+    this.updateSelectedNameSubject();
   }
 
   onDefaultScaleRatioChanged() {
@@ -90,7 +114,8 @@ export class ImageUpscalingComponent implements OnInit {
 
   onSubmit() {
     if (this.upscaleForm.invalid) return;
-    if (!this.selectedFile) return;
+    let files = this.getSelectedFilesList();
+    if (files.length === 0) return;
 
     let upscaleObject: RealEsrganImageRequest = {};
     if (!this.useDefaultScaleRatio.value) {
@@ -106,16 +131,18 @@ export class ImageUpscalingComponent implements OnInit {
       upscaleObject.verboseOutput = (this.verboseOutput.value! === 'true');
     }
 
-    let imageUpscalingSubscription = this.imageUpscalingService
-      .upscaleImage(upscaleObject, this.selectedFile)
-      .pipe(
-        catchError((error) => {
-          this.RealEsrganImageFailureMessage = "Failed to send request due to error: " + JSON.stringify(error);
-          return throwError(error);
-        })
-      );
+    files.forEach(file => {
+      let imageUpscalingSubscription = this.imageUpscalingService
+        .upscaleImage(upscaleObject, file)
+        .pipe(
+          catchError((error) => {
+            this.RealEsrganImageFailureMessage = "Failed to send request due to error: " + JSON.stringify(error);
+            return throwError(error);
+          })
+        );
 
-    this.inboxService.imageUpscaleSubscription(imageUpscalingSubscription, this.selectedFile.name);
+      this.inboxService.imageUpscaleSubscription(imageUpscalingSubscription, file.name);
+    });
   }
 
 }

@@ -25,6 +25,7 @@ public class RealEsrganService
 
     public async Task<string> GetHelp()
     {
+        _logger.LogInformation("Getting real-esrgan help");
         var result =
             await CommandLineRunnerService.ExecuteCommandAsync(RealEsrganExecutablePath!, new[] { "-h" }, false);
         _logger.LogDebug("Fetched real esrgan help: {help}", result);

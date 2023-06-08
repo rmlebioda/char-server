@@ -16,6 +16,7 @@ public class QBitTorrentService
 
     public async Task AddMagnet(string magnet)
     {
+        _logger.LogInformation("Adding magnet: {magnet}", magnet);
         await CommandLineRunnerService.ExecuteCommandAsync(ProgramName,
             new[] {"--skip-dialog=true", magnet},
             true);

@@ -1,13 +1,17 @@
 using Api.Startup.Core;
 using Cli.RealEsrgan;
+using Cli.Torrent;
+using Cli.Torrent.Models.QBitTorrentCliService;
 using EnvironmentSettings;
-using Newtonsoft.Json.Converters;
+using Microsoft.Extensions.Logging.Abstractions;
 using Serilog;
 
 // validate environment variables
 void ValidateEnvironmentSettings()
 {
     RealEsrganService.ValidateEnvironmentSettings();
+    _ = new QBitTorrentCliService(NullLogger.Instance)
+        .GetVersionAsync(QBitTorrentCredentials.FromEnvironmentVariables()).Result;
 }
 
 ValidateEnvironmentSettings();
@@ -31,10 +35,7 @@ var logger = loggerConfiguration.CreateLogger();
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new DateTimeIsoJsonConverter());
-    });
+    .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new DateTimeIsoJsonConverter()); });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -46,8 +47,15 @@ var app = builder
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(c =>
+    {
+        c.RouteTemplate = "swagger/{documentname}/swagger.json";
+    });
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Cool API V1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
 app.UseHttpsRedirection();

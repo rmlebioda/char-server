@@ -22,7 +22,8 @@ public class TorrentController : ControllerBase
     }
 
     [HttpPost("add", Name = "Add new torrent via magnet (supports only qBitTorrent)")]
-    public async Task<ActionResult> RealEsrgan(TorrentAddRequest request)
+    [Obsolete("Use qbt endpoints for torrent managing, this endpoint is no longer supported and maintained")]
+    public async Task<ActionResult> AddTorrent(TorrentAddRequest request)
     {
         await _qBitTorrentService.AddMagnet(request.Magnet);
         return Ok();

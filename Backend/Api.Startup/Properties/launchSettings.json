@@ -17,7 +17,10 @@
       "applicationUrl": "http://localhost:5166",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "real_esrgan_executable": "/bin/realesrgan-ncnn-vulkan-20220424-ubuntu/realesrgan-ncnn-vulkan"
+        "real_esrgan_executable": "/bin/realesrgan-ncnn-vulkan-20220424-ubuntu/realesrgan-ncnn-vulkan",
+        "qbt_url": "http://localhost:3108",
+        "qbt_username": "admin",
+        "qbt_password": "admin123"
       }
     },
     "https": {

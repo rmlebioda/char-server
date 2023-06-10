@@ -1,0 +1,12 @@
+<div class="main-div">
+  <form class="form" [formGroup]="addTorrentForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Enter torrent URL:</label>
+      <mat-form-field class="margin-left-40">
+        <input matInput type="text" [formControl]="magnet">
+      </mat-form-field>
+    </div>
+
+    <button type="submit">Send</button>
+  </form>
+</div>

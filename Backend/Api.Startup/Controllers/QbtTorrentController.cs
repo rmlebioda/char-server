@@ -30,10 +30,10 @@ public class QbtTorrentController : ControllerBase
         return Ok(torrents);
     }
     
-    [HttpPost("add/url/{url}", Name = "Add torrent with URL")]
-    public async Task<ActionResult> AddTorrentUrlAsync(string url)
+    [HttpPost("add/url", Name = "Add torrent with URL")]
+    public async Task<ActionResult> AddTorrentUrlAsync(AddQbtTorrentRequest request)
     {
-        await _qBitTorrentCliService.AddTorrentWithUrlAsync(url, _qBitTorrentCredentials);
+        await _qBitTorrentCliService.AddTorrentWithUrlAsync(request.Url, _qBitTorrentCredentials);
         return Ok();
     }
     

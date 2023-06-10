@@ -30,13 +30,19 @@ import {TimeagoModule} from "ngx-timeago";
 import {TorrentComponent} from './modules/components/torrent/torrent.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { TorrentAddDialogComponent } from './modules/components/torrent-add-dialog/torrent-add-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {NgxFilesizeModule} from "ngx-filesize";
+import { TorrentDeleteDialogComponent } from './modules/components/torrent-delete-dialog/torrent-delete-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ImageUpscalingComponent,
     InboxComponent,
-    TorrentComponent
+    TorrentComponent,
+    TorrentAddDialogComponent,
+    TorrentDeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +68,9 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     MatTableModule,
     TimeagoModule.forRoot(),
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule,
+    NgxFilesizeModule
   ],
   providers: [
     ColorSchemeService,

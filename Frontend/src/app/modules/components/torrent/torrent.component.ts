@@ -1,61 +1,107 @@
-import { Component } from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {TorrentAddRequest} from "../../models/torrent-add-request";
-import {TorrentService} from "../../services/torrent.service";
-import {catchError, finalize, throwError} from "rxjs";
+import {Component} from '@angular/core';
+import {BehaviorSubject, catchError, finalize, interval, Observable, pipe, Subscription, throwError} from "rxjs";
 import {SpinnerService} from "../../services/spinner.service";
 import {SnackBarService} from "../../services/snack-bar.service";
+import {Torrent} from "../../models/torrent";
+import {MatDialog} from "@angular/material/dialog";
+import {TorrentAddDialogComponent} from "../torrent-add-dialog/torrent-add-dialog.component";
+import {QbtTorrentService} from "../../services/qbt-torrent.service";
+import {TorrentDeleteDialogComponent} from "../torrent-delete-dialog/torrent-delete-dialog.component";
 
 @Component({
-  selector: 'app-torrent',
+  selector: 'app-torrent.ts',
   templateUrl: './torrent.component.html',
   styleUrls: ['./torrent.component.scss']
 })
 export class TorrentComponent {
 
-  public AddTorrentErrorMessage: string = "";
 
-  public magnet = new FormControl({value: '', disabled: false}, [Validators.required]);
+  public torrents: Observable<Torrent[]>;
+  private torrentSubject: BehaviorSubject<Torrent[]> = new BehaviorSubject<Torrent[]>([]);
+  private refreshTorrentListInterval = interval(15000);
+  private refreshTorrentListSubscription: Subscription;
 
-  public torrentForm: FormGroup = new FormGroup({
-    magnet: this.magnet
-  });
+  public displayedColumns = ['name', 'size', 'progress', 'addedOn', 'delete'];
 
   constructor(
-    private torrentService: TorrentService,
+    private dialog: MatDialog,
+    private qbtTorrentService: QbtTorrentService,
     private spinnerService: SpinnerService,
     private snackBarService: SnackBarService
   ) {
+    this.torrents = this.torrentSubject.asObservable();
+
+    this.refreshTorrentListSubscription = this.refreshTorrentListInterval.subscribe(val => {
+      this.refreshTorrents();
+    });
+
+    this.refreshTorrents();
   }
 
-  onSubmit() {
-    if (!this.torrentForm.valid) {
-      return;
-    }
+  private subscribeToTorrentList() {
+    this.refreshTorrentListSubscription = this.refreshTorrentListInterval.subscribe(val => {
+      this.refreshTorrents();
+    });
+  }
 
-    let request: TorrentAddRequest = {
-      magnet: this.magnet.value!
-    };
+  private unsubscribeToTorrentList() {
+    this.refreshTorrentListSubscription.unsubscribe();
+  }
 
-    let observable = this.torrentService
-      .add(request);
-
-    let spinnerObservable = this.spinnerService.spinForObservable(observable);
-
-    this.AddTorrentErrorMessage = "";
-    let subscription = spinnerObservable
+  private refreshTorrents() {
+    console.log("refresh called");
+    this.spinnerService.spinForObservable(this.qbtTorrentService.list())
       .pipe(
         catchError((error) => {
-          this.AddTorrentErrorMessage = "Failed to add magnet due to error: " + JSON.stringify(error)
-          return throwError(error);
-        })
-      )
-      .subscribe(
-        (response) => {
-          this.snackBarService.show("Added new magnet");
-          this.magnet.setValue("");
-        }
-      );
+          this.snackBarService.show("Failed to fetch torrent list");
+          throw error;
+        }))
+      .subscribe((torrents) => {
+        console.log(torrents);
+        this.torrentSubject.next(torrents);
+      });
   }
 
+  deleteTorrent(torrent: Torrent) {
+    this.unsubscribeToTorrentList();
+
+    const dialogRef = this.dialog.open(TorrentDeleteDialogComponent, {
+      data: {torrentHash: torrent.hash}
+    });
+
+    dialogRef.afterClosed()
+      .subscribe((result: Observable<object>) => {
+        if (!result) return;
+        this.handleBlockingObservable(result, "Failed to delete torrent due to unknown error", "Torrent deleted");
+      })
+  }
+
+  addTorrent() {
+    this.unsubscribeToTorrentList();
+
+    const dialogRef = this.dialog.open(TorrentAddDialogComponent);
+
+    dialogRef.afterClosed()
+      .subscribe((result: Observable<object>) => {
+        if (!result) return;
+        this.handleBlockingObservable(result, "Failed to add torrent due to unknown error", "Added new torrent");
+      })
+  }
+
+  private handleBlockingObservable<T>(obs: Observable<T>, successMsg: string, errorMsg: string) {
+    let subscription = this.spinnerService.spinForObservable(obs);
+    subscription
+      .pipe(
+        catchError((error) => {
+          console.log(error);
+          this.snackBarService.show(successMsg);
+          throw error;
+        })
+      )
+      .subscribe(result => {
+        this.refreshTorrents();
+        this.subscribeToTorrentList();
+        this.snackBarService.show(errorMsg);
+      })
+  }
 }

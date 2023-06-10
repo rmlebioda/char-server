@@ -42,3 +42,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-mdc-menu-panel.mat-mdc-menu-panel {
   max-width: none !important;
 }
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.margin-bottom-20 {
+  margin-bottom: 20px;
+}
+
+.margin-top-20 {
+  margin-top: 20px;
+}
+
+.padding-5 {
+  padding: 5px;
+}
+
+.margin-5 {
+  margin: 5px;
+}

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, finalize, Observable, tap} from "rxjs";
+import {BehaviorSubject, defer, finalize, Observable, of, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +21,12 @@ export class SpinnerService {
   }
 
   spinForObservable<T>(observable: Observable<T>) {
-    return observable
-      .pipe(
-        tap((value) => this.enable()),
-        finalize(() => this.disable())
-      );
+    return defer(() => {
+      this.enable();
+      return observable
+        .pipe(
+          finalize(() => this.disable())
+        )
+    });
   }
 }

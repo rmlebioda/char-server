@@ -1,24 +1,50 @@
 <div>
-  <h1>Torrent</h1>
 
-  <mat-card class="form-card">
-    <h2>Add torrent with magnet (qBitTorrent)</h2>
+  <mat-toolbar>
+    <h1>Torrents</h1>
 
-    <form class="form" [formGroup]="torrentForm" (ngSubmit)="onSubmit()">
+    <span class="toolbar-spacer"></span>
 
-      <div>
-        <label>Magnet URL:</label>
-        <mat-form-field class="margin-left-40" required class="magnet-input">
-          <input matInput type="string" [formControl]="magnet">
-        </mat-form-field>
-      </div>
+    <button mat-mini-fab color="primary" aria-label="Add new torrent" (click)="addTorrent()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-toolbar>
 
-      <button type="submit">Send</button>
 
-      <div class="error margin-bottom-20" *ngIf="AddTorrentErrorMessage">
-        {{AddTorrentErrorMessage}}
-      </div>
+  <table mat-table [dataSource]="torrents" class="mat-elevation-z8">
 
-    </form>
-  </mat-card>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <th mat-cell *matCellDef="let torrent">{{ torrent.name }}</th>
+    </ng-container>
+
+    <ng-container matColumnDef="size">
+      <th mat-header-cell *matHeaderCellDef>Size</th>
+      <th mat-cell *matCellDef="let torrent">{{ torrent.size | filesize }}</th>
+    </ng-container>
+
+    <ng-container matColumnDef="progress">
+      <th mat-header-cell *matHeaderCellDef>Progress</th>
+      <th mat-cell *matCellDef="let torrent">{{ torrent.progress | percent }}</th>
+    </ng-container>
+
+    <ng-container matColumnDef="addedOn">
+      <th mat-header-cell *matHeaderCellDef>Added On</th>
+      <th mat-cell *matCellDef="let torrent">{{ torrent.addedOn | timeago }}</th>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <th mat-cell *matCellDef="let torrent">
+        <button mat-icon-button color="primary" aria-label="Toggle navigation" (click)="deleteTorrent(torrent)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </th>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
 </div>

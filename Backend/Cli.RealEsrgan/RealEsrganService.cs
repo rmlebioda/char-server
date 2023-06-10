@@ -27,8 +27,9 @@ public class RealEsrganService
     {
         _logger.LogInformation("Getting real-esrgan help");
         var result =
-            await CommandLineRunnerService.ExecuteCommandAsync(RealEsrganExecutablePath!, new[] { "-h" }, false);
-        _logger.LogDebug("Fetched real esrgan help: {help}", result);
+            await CommandLineRunnerService.ExecuteCommandAsync(_logger, RealEsrganExecutablePath!, new[] { "-h" },
+                false);
+        _logger.LogDebug("Fetched real esrgan help: {Help}", result);
         return result.Output;
     }
 
@@ -43,8 +44,8 @@ public class RealEsrganService
             sourceImagePath, new FileInfo(sourceImagePath).Length / 1024, settings, outputImagePath);
 
         var result =
-            await CommandLineRunnerService.ExecuteCommandAsync(RealEsrganExecutablePath!,
-                BuildArguments(sourceImagePath, settings, outputImagePath),
+            await CommandLineRunnerService.ExecuteCommandAsync(_logger, RealEsrganExecutablePath!,
+                BuildArguments(sourceImagePath, settings, outputImagePath).ToList(),
                 true);
 
         _logger.LogInformation("Converted image, new file size: {Size} KiB",

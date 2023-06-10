@@ -20,8 +20,8 @@ public class QBitTorrentCliService
 
     public async Task<string> GetHelpAsync()
     {
-        var result = await CommandLineRunnerService.ExecuteCommandAsync(ProgramName,
-            new string[] { "--help" },
+        var result = await CommandLineRunnerService.ExecuteCommandAsync(_logger, ProgramName,
+            new[] { "--help" },
             true);
         return result.Output;
     }
@@ -29,8 +29,8 @@ public class QBitTorrentCliService
     public async Task<QBitTorrentCliVersion> GetVersionAsync(QBitTorrentCredentials credentials)
     {
         _logger.LogInformation("Fetching QBT Cli version");
-        var result = await CommandLineRunnerService.ExecuteCommandAsync(ProgramName,
-            BuildArgsWithCredentials(credentials, "server", "info"),
+        var result = await CommandLineRunnerService.ExecuteCommandAsync(_logger, ProgramName,
+            BuildArgsWithCredentials(credentials, "server", "info").ToList(),
             true);
         return _parser.ParseVersion(result.Output);
     }
@@ -38,25 +38,25 @@ public class QBitTorrentCliService
     public async Task<IEnumerable<QBitTorrentSingularTorrent>> GetTorrentListAsync(QBitTorrentCredentials credentials)
     {
         _logger.LogInformation("Fetching torrent list");
-        var result = await CommandLineRunnerService.ExecuteCommandAsync(ProgramName,
-            BuildArgsWithCredentials(credentials, "torrent", "list", "--format", "csv"),
+        var result = await CommandLineRunnerService.ExecuteCommandAsync(_logger, ProgramName,
+            BuildArgsWithCredentials(credentials, "torrent", "list", "--format", "csv").ToList(),
             true);
         return _parser.ParseTorrentListAsCsv(result.Output);
     }
 
     public async Task AddTorrentWithUrlAsync(string url, QBitTorrentCredentials credentials)
     {
-        _logger.LogInformation("adding torrent from url: {url}", url);
-        _ = await CommandLineRunnerService.ExecuteCommandAsync(ProgramName,
-            BuildArgsWithCredentials(credentials, "torrent", "add", "url", url),
+        _logger.LogInformation("adding torrent from url: {Url}", url);
+        _ = await CommandLineRunnerService.ExecuteCommandAsync(_logger, ProgramName,
+            BuildArgsWithCredentials(credentials, "torrent", "add", "url", url).ToList(),
             true);
     }
 
     public async Task DeleteTorrentAsync(string hash, bool withFiles, QBitTorrentCredentials credentials)
     {
-        _logger.LogInformation("deleting torrent with hash: {hash}", hash);
-        _ = await CommandLineRunnerService.ExecuteCommandAsync(ProgramName,
-            BuildArgsWithCredentials(credentials, "torrent", "delete", hash),
+        _logger.LogInformation("deleting torrent with hash: {Hash}", hash);
+        _ = await CommandLineRunnerService.ExecuteCommandAsync(_logger, ProgramName,
+            BuildArgsWithCredentials(credentials, "torrent", "delete", hash).ToList(),
             true);
     }
     

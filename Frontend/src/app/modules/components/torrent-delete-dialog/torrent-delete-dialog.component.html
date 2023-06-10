@@ -1,0 +1,13 @@
+<div class="main-div">
+  <label>Delete torrent with files?</label>
+  <div class="margin-top-20">
+    <mat-grid-list cols="2" rowHeight="2:1">
+      <mat-grid-tile>
+        <button mat-button class="margin-5" (click)="onDelete()">Only torrent</button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button mat-button class="margin-5" (click)="onDeleteWithFiles()">Torrent with files</button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>

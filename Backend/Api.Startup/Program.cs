@@ -6,31 +6,42 @@ using EnvironmentSettings;
 using Microsoft.Extensions.Logging.Abstractions;
 using Serilog;
 
-// validate environment variables
-void ValidateEnvironmentSettings()
-{
-    RealEsrganService.ValidateEnvironmentSettings();
-    _ = new QBitTorrentCliService(NullLogger.Instance)
-        .GetVersionAsync(QBitTorrentCredentials.FromEnvironmentVariables()).Result;
-}
-
-ValidateEnvironmentSettings();
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var logDirectoryPath = Environment.GetEnvironmentVariable(Variables.LogDirectoryPath);
+var logFilePath = Environment.GetEnvironmentVariable(Variables.LogPath);
+var logDirectoryPath = Path.GetDirectoryName(logFilePath);
 
 var loggerConfiguration = new LoggerConfiguration();
 loggerConfiguration.Enrich.FromLogContext();
 if (Directory.Exists(logDirectoryPath))
+{
     loggerConfiguration.WriteTo.File(Path.Combine(logDirectoryPath, $"{Settings.ServerName}_backend_logs.txt"),
         rollingInterval: RollingInterval.Day,
         rollOnFileSizeLimit: true,
         fileSizeLimitBytes: 100 * 1024 * 1024);
+}
+else
+{
+    Console.WriteLine($"Logging directory {logDirectoryPath} does not exist, logging file will not be used");
+}
+
 loggerConfiguration.WriteTo.Console();
 loggerConfiguration.MinimumLevel.Verbose();
 var logger = loggerConfiguration.CreateLogger();
+
+// validate environment variables
+async Task ValidateEnvironmentSettings()
+{
+    var loggerFactory = new LoggerFactory()
+        .AddSerilog(logger);
+    
+    RealEsrganService.ValidateEnvironmentSettings();
+    _ = await new QBitTorrentCliService(loggerFactory.CreateLogger("ValidateEnvironmentSettings"))
+        .GetVersionAsync(QBitTorrentCredentials.FromEnvironmentVariables());
+}
+
+await ValidateEnvironmentSettings();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
@@ -47,10 +58,7 @@ var app = builder
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(c =>
-    {
-        c.RouteTemplate = "swagger/{documentname}/swagger.json";
-    });
+    app.UseSwagger(c => { c.RouteTemplate = "swagger/{documentname}/swagger.json"; });
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Cool API V1");

@@ -24,7 +24,7 @@ public class CsvFileDictionaryRepresentation
                 var elements = new List<string>();
                 
                 for (int i = 0; i < Headers.Length; i++)
-                    elements.Add(csvReader.GetField<string>(i));
+                    elements.Add(csvReader.GetField<string>(i)!);
                 
                 Records.Add(elements);
             }

@@ -13,6 +13,8 @@ public class QbtParser
     {
         var dictionary = new Dictionary<string, string>();
         var commaCount = value.Count(s => s == ':');
+        if (commaCount == 0)
+            throw new ApplicationException("Invalid string, no comma found, value: " + value);
         foreach (var line in value.SplitInParts(value.Length / commaCount))
         {
             if (line.Contains(':'))

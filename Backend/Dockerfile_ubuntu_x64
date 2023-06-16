@@ -33,12 +33,19 @@ RUN unzip realesrgan-ncnn-vulkan-20220424-ubuntu.zip -d real-esrgan
 RUN mv real-esrgan /app
 RUN ["chmod", "+x", "/app/real-esrgan/realesrgan-ncnn-vulkan"]
 
+# download qbt-cli
+RUN wget https://github.com/fedarovich/qbittorrent-cli/releases/download/v1.7.22315.1/qbt-linux-x64-1.7.22315.1.tar.gz
+RUN mkdir qbt-cli
+RUN tar -xvzf qbt-linux-x64-1.7.22315.1.tar.gz -C qbt-cli
+RUN mv qbt-cli /app
+ENV PATH="${PATH}:/app/qbt-cli"
+
 WORKDIR /app
 
 COPY --from=build-env /app/out .
 
 ENV real_esrgan_executable=/app/real-esrgan/realesrgan-ncnn-vulkan
-ENV log_directory_path=/logs
+ENV log_path=/logs/backend.txt
 
 CMD dotnet Api.Startup.dll --urls http://0.0.0.0:5000
 

@@ -4,6 +4,5 @@ namespace Api.Startup.Models.Qbt;
 
 public class AddQbtTorrentRequest
 {
-    [Required]
-    public string Url { get; set; }
+    [Required] public string Url { get; set; } = default!;
 }

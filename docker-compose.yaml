@@ -5,6 +5,14 @@ services:
       dockerfile: Backend/Dockerfile_ubuntu_x64
     restart: unless-stopped
     image: home_server_backend:latest
+    volumes:
+      - /miria/logs/home_server/backend:/logs
+    environment:
+      log_path: /logs/backend.txt
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     devices:
       - "/dev/dri"
   frontend:

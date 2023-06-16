@@ -37,12 +37,13 @@ async Task ValidateEnvironmentSettings()
         .AddSerilog(logger);
     
     RealEsrganService.ValidateEnvironmentSettings();
-    _ = await new QBitTorrentCliService(loggerFactory.CreateLogger("ValidateEnvironmentSettings"))
-        .GetVersionAsync(QBitTorrentCredentials.FromEnvironmentVariables());
+    // _ = await new QBitTorrentCliService(loggerFactory.CreateLogger("ValidateEnvironmentSettings"))
+    //     .GetVersionAsync(QBitTorrentCredentials.FromEnvironmentVariables());
 }
 
 await ValidateEnvironmentSettings();
 
+// building
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 builder.Services.AddControllers()

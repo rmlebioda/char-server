@@ -23,6 +23,12 @@ public class QbtTorrentController : ControllerBase
         _qBitTorrentCredentials = QBitTorrentCredentials.FromEnvironmentVariables();
     }
 
+    [HttpGet("version", Name = "Get server version info")]
+    public async Task<ActionResult> GetServerVersionInfo()
+    {
+        return Ok(await _qBitTorrentCliService.GetVersionAsync(_qBitTorrentCredentials));
+    }
+
     [HttpGet("list", Name = "Lists all torrents")]
     public async Task<ActionResult> ListTorrentsAsync()
     {
